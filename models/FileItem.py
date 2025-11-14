@@ -4,11 +4,11 @@
 - id: SHA256 hash of normalized path, size, and mtime epoch."""
 
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from datetime import datetime
 from hashlib import sha256
-
+from typing import List
 
 @dataclass(frozen=True, slots=True)
 class FileItem:
@@ -19,6 +19,7 @@ class FileItem:
     size: int
     last_modified: datetime
     created: datetime
+    tags: List[str] = field(default_factory=List)
 
     def __post_init__(self) -> None:
         mtime_epoch = int(self.last_modified.timestamp())
@@ -26,3 +27,6 @@ class FileItem:
         object.__setattr__(
             self,'id', sha256(data).hexdigest()
         )
+    
+    def with_tag(self, tag) -> "FileItem":
+        return replace(self, tags=[*self.tags, tag])
