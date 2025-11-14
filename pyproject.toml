@@ -1,15 +1,15 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "filemason"
 version = "0.1.0"
-description = "a config-driven file organizing cli tool"
+description = "a file organizing cli tool"
 authors = [{name = "Karson Bryant"}]
 readme = "README.md"
 dependencies = []
 requires-python = ">=3.12.4"
 
-[project.scripts]
-filemason = "filemason.cli:main"
-
-
-
-
+[project.optinal-dependencies]
+dev = ["pytest>=8.0.0", "pytest-cov>=4.1"]
