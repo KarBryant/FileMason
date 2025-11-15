@@ -70,10 +70,10 @@ class Reader:
         """
         
         stats = file.stat()
-        all_suffixes = ".".join(suffix.lstrip(".") for suffix in file.suffixes)
+        extension = ".".join(s.lstrip(".") for s in file.suffixes).lower()
         file_name=file.stem
         file_path= file.resolve(strict=False)
-        file_extension=all_suffixes
+        file_extension=extension
         file_size = stats.st_size
         file_last_modified = datetime.fromtimestamp(stats.st_mtime,
                     tz=timezone.utc).replace(microsecond=0)
