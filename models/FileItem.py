@@ -19,7 +19,7 @@ class FileItem:
     size: int
     last_modified: datetime
     created: datetime
-    tags: List[str] = field(default_factory=List)
+    tags: List[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         mtime_epoch = int(self.last_modified.timestamp())

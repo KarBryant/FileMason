@@ -18,8 +18,8 @@ class Classifier:
         classified_list = []
 
         for file in file_list:
-            extention = file.extension.lower()
-            bucket = self.ext_to_buckets.get(extention)
+            extension = file.extension.lower()
+            bucket = self.ext_to_buckets.get(extension)
             new_file = file.with_tag(bucket)
             classified_list.append(new_file)
 
