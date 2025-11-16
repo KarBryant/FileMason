@@ -161,31 +161,6 @@ This allows:
 - Detailed reporting without halting execution
 - User awareness of what was ignored and why
 
-## 🗺️ Roadmap
-
-### Phase 1: Core Functionality (Current)
-- [x] File reading with error handling
-- [x] File classification by extension
-- [x] Configuration system
-- [x] Comprehensive testing for Reader
-- [ ] Testing for Classifier
-- [ ] Error handling for config loader
-
-### Phase 2: CLI & Organization (Next)
-- [ ] CLI argument parsing
-- [ ] File moving functionality
-- [ ] Dry-run mode
-- [ ] Progress indicators
-- [ ] Logging system
-
-### Phase 3: Advanced Features (Future)
-- [ ] Custom bucket definitions via CLI
-- [ ] Duplicate detection
-- [ ] Undo functionality
-- [ ] Recursive directory support (optional)
-- [ ] File renaming patterns
-- [ ] Integration with cloud storage
-
 ## 🤝 Contributing
 
 This is a learning project, but suggestions and feedback are welcome! Feel free to:
