@@ -14,7 +14,7 @@ class Classifier:
         self.ext_to_buckets:Dict[str,str] = invert_bucket_dict(buckets['buckets'])
 
     
-    def classify(self, file_list:List[FileItem]) -> List[FileItem]:
+    def classify(self, file_list:List[FileItem]) -> list[FileItem]:
         classified_list = []
 
         for file in file_list:

@@ -1,7 +1,11 @@
 from services.Reader import Reader
+from services.classifier import Classifier
 import pytest
 from pathlib import Path
 
+@pytest.fixture
+def classifier(buckets) -> Classifier:
+    return Classifier(buckets)
 
 @pytest.fixture
 def reader() -> Reader:
@@ -12,6 +16,43 @@ def directory(tmp_path:Path) -> Path:
     dir:Path = tmp_path / "tmpdir"
     dir.mkdir()
     return dir
+
+@pytest.fixture
+def config(directory) -> Path:
+    config = directory / "config.toml"
+    config.write_text(f"[buckets]\nimages = ['png', 'jpeg', 'gif']")
+    return config
+
+@pytest.fixture
+def bad_toml_config(directory):
+    config = directory / "config.toml"
+    config.write_text("test = [bad data,test]")
+    return config
+
+@pytest.fixture
+def config_with_multiple_extensions(directory) -> Path:
+    config = directory / "config.toml"
+    config.write_text(f"[buckets]\nimages = ['png', 'jpeg', 'gif']\nvideos = ['png','mp4','mov']")
+    return config
+
+@pytest.fixture
+def config_with_empty_bucket(directory):
+    config = directory / "config.toml"
+    config.write_text(f"[buckets]\nimages = []")
+    return config
+
+@pytest.fixture
+def config_with_many_empty_buckets(directory):
+    config = directory / "config.toml"
+    config.write_text(f"[buckets]\nimages =[]\nvideos=[]")
+    return config
+
+@pytest.fixture
+def config_with_no_buckets(directory):
+    config = directory / "config.toml"
+    config.write_text("images=['png']")
+    return config
+
 
 @pytest.fixture
 def directory_with_subdir(directory:Path) -> Path:

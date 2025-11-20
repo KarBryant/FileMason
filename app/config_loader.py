@@ -1,14 +1,14 @@
 import tomllib
 from pathlib import Path
-from exceptions import ConfigFileError, ConfigParseError, ConfigValidationError
+from app.exceptions import ConfigFileError, ConfigParseError, ConfigValidationError
 from typing import Dict,List, Any
 
 _config_cache:Dict[str,Any] | None = None
 
+config_path = Path(__file__).parent / "config.toml"
+
 def load_config() -> Dict[str,Any]:
     global _config_cache
-
-    config_path = Path(__file__).parent / "config.toml"
 
     if _config_cache is not None:
         return _config_cache
