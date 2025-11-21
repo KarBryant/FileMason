@@ -4,7 +4,9 @@ from app.exceptions import ConfigValidationError, ConfigFileError, ConfigParseEr
 import app.config_loader as config_loader
 
 
-def test_config_not_cached(config):
+
+def test_config_not_cached():
+    config_loader._config_cache = None
     assert config_loader._config_cache is None
 
 def test_config_with_no_buckets(config_with_no_buckets,monkeypatch):

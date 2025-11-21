@@ -13,7 +13,6 @@ class Classifier:
     def __init__(self, buckets:Dict):
         self.ext_to_buckets:Dict[str,str] = invert_bucket_dict(buckets['buckets'])
 
-    
     def classify(self, file_list:List[FileItem]) -> list[FileItem]:
         classified_list = []
 

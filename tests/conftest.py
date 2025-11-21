@@ -11,6 +11,7 @@ def classifier(buckets) -> Classifier:
 def reader() -> Reader:
     return Reader()
 
+
 @pytest.fixture
 def directory(tmp_path:Path) -> Path:
     dir:Path = tmp_path / "tmpdir"
@@ -18,9 +19,14 @@ def directory(tmp_path:Path) -> Path:
     return dir
 
 @pytest.fixture
+def read_data(basic_dir):
+    return Reader().read_directory(basic_dir)
+
+
+@pytest.fixture
 def config(directory) -> Path:
     config = directory / "config.toml"
-    config.write_text(f"[buckets]\nimages = ['png', 'jpeg', 'gif']")
+    config.write_text(f"[buckets]\nimages = ['txt', 'jpeg', 'gif']")
     return config
 
 @pytest.fixture
