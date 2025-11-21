@@ -3,9 +3,6 @@ from services.classifier import Classifier
 import pytest
 from pathlib import Path
 
-@pytest.fixture
-def classifier(buckets) -> Classifier:
-    return Classifier(buckets)
 
 @pytest.fixture
 def reader() -> Reader:
@@ -19,14 +16,9 @@ def directory(tmp_path:Path) -> Path:
     return dir
 
 @pytest.fixture
-def read_data(basic_dir):
-    return Reader().read_directory(basic_dir)
-
-
-@pytest.fixture
 def config(directory) -> Path:
     config = directory / "config.toml"
-    config.write_text(f"[buckets]\nimages = ['txt', 'jpeg', 'gif']")
+    config.write_text(f"[buckets]\nimages = ['png', 'jpeg', 'gif']")
     return config
 
 @pytest.fixture

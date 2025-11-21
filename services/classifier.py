@@ -13,16 +13,20 @@ class Classifier:
     def __init__(self, buckets:Dict):
         self.ext_to_buckets:Dict[str,str] = invert_bucket_dict(buckets['buckets'])
 
-    def classify(self, file_list:List[FileItem]) -> list[FileItem]:
+    def classify(self, file_list:List[FileItem]) -> tuple[list[FileItem], list[FileItem]]:
         classified_list = []
+        unclassified_list = []
 
         for file in file_list:
             extension = file.extension.lower().lstrip(".")
+            
             bucket = self.ext_to_buckets.get(extension)
-            new_file = file.with_tag(bucket)
-            classified_list.append(new_file)
+            if bucket is None:
+                unclassified_list.append(file)
+            else:
+                classified_list.append(file.with_tag(bucket))
 
-        return classified_list
+        return classified_list,unclassified_list
     
 
 def invert_bucket_dict(buckets: Dict[str,list]) -> dict[str,str]:
