@@ -10,7 +10,7 @@ FileMason automates file organization by reading directories, classifying files 
 
 ## 🚀 Why I built this
 
-I started learning Python in August of 2025. While learning the fundamentals, I felt like I didn’t have anything meaningful to apply my knowledge to—just a few basic scripts or guided projects. I wanted to build something **real**, something that would genuinely push me.
+I started learning Python in June of 2025. While learning the fundamentals, I felt like I didn’t have anything meaningful to apply my knowledge to—just a few basic scripts or guided projects. I wanted to build something **real**, something that would genuinely push me.
 
 When I started FileMason, I only had a high-level understanding of architecture and the software development lifecycle. This project became my whetstone — the tool I’m using to hone my skills as a junior software developer.
 
