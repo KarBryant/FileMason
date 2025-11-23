@@ -1,6 +1,8 @@
-from models.FileItem import FileItem
 from pathlib import Path
+
 import pytest
+
+from filemason.models.FileItem import FileItem
 
 
 def test_basic_file_read(reader, basic_dir):
@@ -21,13 +23,13 @@ def test_multifile_dir_read(reader, multifile_dir):
         assert isinstance(item, FileItem)
 
 
-def test_dir_not_found(reader,tmp_path):
-    missing_dir = tmp_path / 'badinfo'
+def test_dir_not_found(reader, tmp_path):
+    missing_dir = tmp_path / "badinfo"
     with pytest.raises(NotADirectoryError):
         reader.read_directory(missing_dir)
 
 
-def test_symlink_is_skipped(reader ,symlink_dir):
+def test_symlink_is_skipped(reader, symlink_dir):
     files, skipped = reader.read_directory(symlink_dir)
     skipped_path, reason = skipped[0]
     assert len(files) == 1
@@ -36,6 +38,7 @@ def test_symlink_is_skipped(reader ,symlink_dir):
     assert skipped_path == symlink_dir / "link.txt"
     assert isinstance(reason, str)
 
+
 def test_hidden_file_is_skipped(reader, hidden_file_dir):
     files, skipped = reader.read_directory(hidden_file_dir)
     skipped_path, reason = skipped[0]
@@ -43,20 +46,22 @@ def test_hidden_file_is_skipped(reader, hidden_file_dir):
     assert len(skipped) == 1
     assert skipped_path == hidden_file_dir / ".gitignore"
     assert reason == "hidden file skipped"
-    assert isinstance(reason,str)
+    assert isinstance(reason, str)
 
-def test_subdir_is_skipped(reader,directory_with_subdir):
+
+def test_subdir_is_skipped(reader, directory_with_subdir):
     files, skipped = reader.read_directory(directory_with_subdir)
     skipped_path, reason = skipped[0]
     assert files == []
     assert len(skipped) == 1
     assert reason == "subdirectory skipped"
 
-def test_dir_permission_errors(reader,directory, monkeypatch):
+
+def test_dir_permission_errors(reader, directory, monkeypatch):
 
     def fake_iterdir(self):
         raise PermissionError("simulated permission error")
-    
+
     monkeypatch.setattr(Path, "iterdir", fake_iterdir, raising=True)
 
     with pytest.raises(PermissionError) as excinfo:
@@ -64,18 +69,20 @@ def test_dir_permission_errors(reader,directory, monkeypatch):
 
     assert "simulated permission error" in str(excinfo.value)
 
+
 def test_file_permission_failure(reader, basic_dir, monkeypatch):
-    
+
     def fake_create_path(file_path):
         raise PermissionError("simulated permission error")
-    
+
     monkeypatch.setattr(reader, "_create_file", fake_create_path, raising=True)
-    
+
     files, skipped = reader.read_directory(basic_dir)
     skipped_path, reason = skipped[0]
     assert files == []
     assert len(skipped) == 1
     assert "simulated permission error" in reason
+
 
 def test_fifo_is_unrecognized(reader, fifo_dir):
     files, skipped = reader.read_directory(fifo_dir)

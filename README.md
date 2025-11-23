@@ -2,11 +2,17 @@
 
 A file organizer CLI tool built with Python that intelligently categorizes and manages files based on their extensions.
 
-> **⚠️ Project Status:** Currently in active development. The Reader service is production-ready with 100% test coverage. Classifier service and CLI interface are in progress.
+> **⚠️ Project Status:** Currently in active development. The Reader and Classifier services are production-ready with 100% test coverage.
 
 ## 🎯 Purpose
 
 FileMason automates file organization by reading directories, classifying files into configurable buckets (images, videos, documents, etc.), and preparing them for organized storage. Built as a portfolio project demonstrating professional software engineering practices.
+
+## 🚀 Why I built this
+
+I started learning Python in August of 2025. While learning the fundamentals, I felt like I didn’t have anything meaningful to apply my knowledge to—just a few basic scripts or guided projects. I wanted to build something **real**, something that would genuinely push me.
+
+When I started FileMason, I only had a high-level understanding of architecture and the software development lifecycle. This project became my whetstone — the tool I’m using to hone my skills as a junior software developer.
 
 ## ✨ Features
 
@@ -23,6 +29,11 @@ FileMason automates file organization by reading directories, classifying files 
   - Supports compound extensions (`.tar.gz`)
   - O(1) lookup performance via inverted dictionary
   - Categories: images, videos, audio, documents, archives, 3D models
+  - Error handling against empty buckets and duplicate extensions
+
+- **📁 Config Loader** - Configuration file verification, caching, and loading
+  - Checks for bad TOML configuration, empty buckets, or duplicate extensions
+  - Provides custom ConfigLoader errors | ConfigParseError, ConfigValidationError, ConfigFileError
 
 - **📊 Immutable File Metadata**
   - SHA256-based unique file IDs
@@ -30,8 +41,8 @@ FileMason automates file organization by reading directories, classifying files 
   - Frozen dataclass design for thread safety
 
 ### In Progress
-- [ ] Classifier error handling and testing
-- [ ] Config loader validation and error handling  
+- [x] Classifier error handling and testing
+- [x] Config loader validation and error handling  
 - [ ] CLI interface with argument parsing
 - [ ] File moving/organizing functionality
 - [ ] Dry-run mode
@@ -40,16 +51,21 @@ FileMason automates file organization by reading directories, classifying files 
 ## 🏗️ Architecture
 ```
 FileMason/
-├── app/
-│   ├── config.toml          # Bucket definitions
-│   └── config_loader.py     # Configuration management
-├── models/
-│   └── FileItem.py          # Immutable file metadata model
-├── services/
-│   ├── Reader.py            # ✅ Production-ready
-│   └── classifier.py        # 🚧 In progress
+├── src/
+│   └── filemason
+│       ├── config.toml          # Bucket definitions
+│       ├── config_loader.py     # Configuration management │ ✅ Production-ready
+│       ├── models/
+│       │    ├──ActionSteps.py
+│       │    ├──ActionPlan.py
+│       │    └── FileItem.py          # Immutable file metadata model
+│       └── services/
+│           ├── Reader.py            # ✅ Production-ready
+│           └── Classifier.py        # ✅ Production-ready
 └── tests/
     ├── conftest.py          # Pytest fixtures
+    ├──test_classifier.py    # ✅ 100% coverage
+    ├──test_config_loader.py # ✅ 100% coverage
     └── test_reader.py       # ✅ 100% coverage
 ```
 
@@ -77,6 +93,9 @@ cd FileMason
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
+# Install the package in editable mode
+pip install -e .
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -92,11 +111,6 @@ filemason organize /path/to/messy/folder
 # Dry run (preview changes)
 filemason organize /path/to/folder --dry-run
 
-# Custom output directory
-filemason organize /path/to/folder --output /path/to/organized
-
-# Specify config file
-filemason organize /path/to/folder --config custom_config.toml
 ```
 
 ## 🧪 Testing
@@ -120,6 +134,19 @@ pytest tests/ -vv
   - Edge cases (FIFOs, empty directories)
   - Metadata extraction
   - Path handling
+
+- **Classifier Service:** 100% ✅
+  - Unclassified files returned
+  - Classified files returned
+
+- **Config Loader** 100% ✅
+  - Config not cached
+  - Config with no buckets
+  - Duplicate extensions
+  - Empty bucket
+  - Multiple empty buckets
+  - Config cached
+  - Bad TOML configuration
 
 ## ⚙️ Configuration
 
@@ -160,6 +187,7 @@ This allows:
 - Graceful handling of mixed directory contents
 - Detailed reporting without halting execution
 - User awareness of what was ignored and why
+- Allows for providing data to the planned Logger service
 
 ## 🤝 Contributing
 
@@ -185,7 +213,7 @@ MIT License
 
 **Karson Bryant**
 - GitHub: [@KarBryant](https://github.com/KarBryant)
-- Transitioning from 10 years in IT infrastructure to backend development
+- 10 year Infrastructure Engineer looking to add development and automation to my skillset
 - Focused on building production-quality Python applications
 
 ---
