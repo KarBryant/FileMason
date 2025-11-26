@@ -69,7 +69,7 @@ def test_cached_config(config, monkeypatch):
     monkeypatch.setattr(config_loader, "config_path", config)
 
     config_info = load_config()
-    assert config_info != None
+    assert config_info is not None
     assert isinstance(config_info, dict)
 
 
