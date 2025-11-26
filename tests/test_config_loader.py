@@ -1,12 +1,50 @@
 import pytest
 
 import filemason.config_loader as config_loader
+from pathlib import Path
 from filemason.config_loader import load_config
 from filemason.Exceptions import (
     ConfigFileError,
     ConfigParseError,
     ConfigValidationError,
 )
+
+
+@pytest.fixture
+def bad_toml_config(directory):
+    config = directory / "config.toml"
+    config.write_text("test = [bad data,test]")
+    return config
+
+
+@pytest.fixture
+def config_with_multiple_extensions(directory) -> Path:
+    config = directory / "config.toml"
+    config.write_text(
+        "[buckets]\nimages = ['png', 'jpeg', 'gif']\nvideos = ['png','mp4','mov']"
+    )
+    return config
+
+
+@pytest.fixture
+def config_with_empty_bucket(directory):
+    config = directory / "config.toml"
+    config.write_text("[buckets]\nimages = []")
+    return config
+
+
+@pytest.fixture
+def config_with_many_empty_buckets(directory):
+    config = directory / "config.toml"
+    config.write_text("[buckets]\nimages =[]\nvideos=[]")
+    return config
+
+
+@pytest.fixture
+def config_with_no_buckets(directory):
+    config = directory / "config.toml"
+    config.write_text("images=['png']")
+    return config
 
 
 def test_config_not_cached():

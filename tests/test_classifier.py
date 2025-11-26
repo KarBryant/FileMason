@@ -1,43 +1,12 @@
-from pathlib import Path
-
 import pytest
 
-import filemason.config_loader as config_loader
-from filemason.config_loader import load_config
-from filemason.services.classifier import Classifier
+
 from filemason.services.reader import Reader
 
 
 @pytest.fixture
 def read_data_with_no_correct_bucket(basic_dir):
     return Reader().read_directory(basic_dir)
-
-
-@pytest.fixture
-def read_data_with_bucket(dir_with_png):
-    return Reader().read_directory(dir_with_png)
-
-
-@pytest.fixture
-def buckets(config, monkeypatch) -> dict:
-
-    monkeypatch.setattr(config_loader, "config_path", config)
-
-    config_data = load_config()
-    return config_data
-
-
-@pytest.fixture
-def classifier(buckets) -> Classifier:
-    return Classifier(buckets)
-
-
-@pytest.fixture
-def dir_with_png(directory: Path) -> Path:
-    file = directory / "test.png"
-    file.write_bytes(bytes(8))
-
-    return directory
 
 
 def test_unclassified_file(classifier, read_data_with_no_correct_bucket):

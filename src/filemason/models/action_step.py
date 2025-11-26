@@ -22,11 +22,13 @@ class ActionStep:
     Domain model for a singular action step to be taken by the application.
 
     Attributes:
+        id: The hashed ID of the FileItem
         action: The type of action to perform (move, mkdir, or rename).
         source: The source path relevant to the operation. May be None for mkdir.
         destination: The destination path relevant to the operation. May be None for rename.
     """
 
+    file_id: str | None
     action: Action
     source: None | Path
     destination: None | Path
