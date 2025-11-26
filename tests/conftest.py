@@ -3,11 +3,19 @@ from pathlib import Path
 import pytest
 
 from filemason.services.reader import Reader
+from filemason.services.classifier import Classifier
+import filemason.config_loader as config_loader
+from filemason.config_loader import load_config
 
 
 @pytest.fixture
 def reader() -> Reader:
     return Reader()
+
+
+@pytest.fixture
+def classifier(buckets) -> Classifier:
+    return Classifier(buckets)
 
 
 @pytest.fixture
@@ -25,48 +33,39 @@ def config(directory) -> Path:
 
 
 @pytest.fixture
-def bad_toml_config(directory):
-    config = directory / "config.toml"
-    config.write_text("test = [bad data,test]")
-    return config
-
-
-@pytest.fixture
-def config_with_multiple_extensions(directory) -> Path:
-    config = directory / "config.toml"
-    config.write_text(
-        "[buckets]\nimages = ['png', 'jpeg', 'gif']\nvideos = ['png','mp4','mov']"
-    )
-    return config
-
-
-@pytest.fixture
-def config_with_empty_bucket(directory):
-    config = directory / "config.toml"
-    config.write_text("[buckets]\nimages = []")
-    return config
-
-
-@pytest.fixture
-def config_with_many_empty_buckets(directory):
-    config = directory / "config.toml"
-    config.write_text("[buckets]\nimages =[]\nvideos=[]")
-    return config
-
-
-@pytest.fixture
-def config_with_no_buckets(directory):
-    config = directory / "config.toml"
-    config.write_text("images=['png']")
-    return config
-
-
-@pytest.fixture
 def directory_with_subdir(directory: Path) -> Path:
     subdir = directory / "tmpsubdir"
     subdir.mkdir()
 
     return directory
+
+
+@pytest.fixture
+def read_data_with_bucket(dir_with_png):
+    return Reader().read_directory(dir_with_png)
+
+
+@pytest.fixture
+def buckets(config, monkeypatch) -> dict:
+
+    monkeypatch.setattr(config_loader, "config_path", config)
+
+    config_data = load_config()
+    return config_data
+
+
+@pytest.fixture
+def dir_with_png(directory: Path) -> Path:
+    file = directory / "test.png"
+    file.write_bytes(bytes(8))
+
+    return directory
+
+
+@pytest.fixture
+def classifier_output(classifier, read_data_with_bucket):
+    classified_list, unclassified_list = classifier.classify(read_data_with_bucket[0])
+    return classified_list, unclassified_list
 
 
 @pytest.fixture
