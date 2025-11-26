@@ -1,4 +1,5 @@
 # FileMason 🔨
+[![Python package](https://github.com/KarBryant/FileMason/actions/workflows/python-package.yml/badge.svg)](https://github.com/KarBryant/FileMason/actions/workflows/python-package.yml)
 
 A file organizer CLI tool built with Python that intelligently categorizes and manages files based on their extensions.
 
