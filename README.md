@@ -32,6 +32,11 @@ When I started FileMason, I only had a high-level understanding of architecture 
   - Categories: images, videos, audio, documents, archives, 3D models
   - Error handling against empty buckets and duplicate extensions
 
+  **💻 Planning Service** - Plans action steps before execution
+  - Intakes information from the config file, classifier, and a base output directory.
+  - Calculates destination paths for files
+  - Ensures that buckets are created before moving any files.
+
 - **📁 Config Loader** - Configuration file verification, caching, and loading
   - Checks for bad TOML configuration, empty buckets, or duplicate extensions
   - Provides custom ConfigLoader errors | ConfigParseError, ConfigValidationError, ConfigFileError
@@ -57,16 +62,18 @@ FileMason/
 │       ├── config.toml          # Bucket definitions
 │       ├── config_loader.py     # Configuration management │ ✅ Production-ready
 │       ├── models/
-│       │    ├──ActionSteps.py
-│       │    ├──ActionPlan.py
-│       │    └── FileItem.py          # Immutable file metadata model
+│       │    ├──action_steps.py
+│       │    ├──action_plan.py
+│       │    └── file_item.py          # Immutable file metadata model
 │       └── services/
-│           ├── Reader.py            # ✅ Production-ready
-│           └── Classifier.py        # ✅ Production-ready
+│           ├── reader.py            # ✅ Production-ready
+│           ├── planner.py           # ✅ Production-ready
+│           └── rlassifier.py        # ✅ Production-ready
 └── tests/
     ├── conftest.py          # Pytest fixtures
     ├──test_classifier.py    # ✅ 100% coverage
     ├──test_config_loader.py # ✅ 100% coverage
+    ├──test_planner.py       # ✅ 100% coverage
     └── test_reader.py       # ✅ 100% coverage
 ```
 
@@ -95,10 +102,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install the package in editable mode
-pip install -e .
-
-# Install dependencies
-pip install -r requirements.txt
+pip install -e .[dev]
 
 # Run tests
 pytest tests/ -v
