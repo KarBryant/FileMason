@@ -1,4 +1,5 @@
-"""The planner service creates and outputs a list of action steps for the executor to perform. """
+"""The planner service creates and outputs a list of action steps for the executor to perform."""
+
 from pathlib import Path
 from ..models.file_item import FileItem
 from ..models.action_step import ActionStep, Action
