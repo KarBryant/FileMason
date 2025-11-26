@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 from pathlib import Path
 
-from ..models.FileItem import FileItem
+from ..models.file_item import FileItem
 
 
 class Reader:

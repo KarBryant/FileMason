@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 
-import filemason.Config_Loader as config_loader
-from filemason.Config_Loader import load_config
-from filemason.services.Classifier import Classifier
-from filemason.services.Reader import Reader
+import filemason.config_loader as config_loader
+from filemason.config_loader import load_config
+from filemason.services.classifier import Classifier
+from filemason.services.reader import Reader
 
 
 @pytest.fixture

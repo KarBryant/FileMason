@@ -1,7 +1,7 @@
 """Classifies a given list of FileItems."""
 
 from typing import Dict, List
-from ..models.FileItem import FileItem
+from ..models.file_item import FileItem
 
 
 class Classifier:

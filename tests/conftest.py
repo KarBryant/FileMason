@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from filemason.services.Classifier import Classifier
-from filemason.services.Reader import Reader
+from filemason.services.reader import Reader
 
 
 @pytest.fixture
@@ -21,7 +20,7 @@ def directory(tmp_path: Path) -> Path:
 @pytest.fixture
 def config(directory) -> Path:
     config = directory / "config.toml"
-    config.write_text(f"[buckets]\nimages = ['png', 'jpeg', 'gif']")
+    config.write_text("[buckets]\nimages = ['png', 'jpeg', 'gif']")
     return config
 
 
@@ -36,7 +35,7 @@ def bad_toml_config(directory):
 def config_with_multiple_extensions(directory) -> Path:
     config = directory / "config.toml"
     config.write_text(
-        f"[buckets]\nimages = ['png', 'jpeg', 'gif']\nvideos = ['png','mp4','mov']"
+        "[buckets]\nimages = ['png', 'jpeg', 'gif']\nvideos = ['png','mp4','mov']"
     )
     return config
 
@@ -44,14 +43,14 @@ def config_with_multiple_extensions(directory) -> Path:
 @pytest.fixture
 def config_with_empty_bucket(directory):
     config = directory / "config.toml"
-    config.write_text(f"[buckets]\nimages = []")
+    config.write_text("[buckets]\nimages = []")
     return config
 
 
 @pytest.fixture
 def config_with_many_empty_buckets(directory):
     config = directory / "config.toml"
-    config.write_text(f"[buckets]\nimages =[]\nvideos=[]")
+    config.write_text("[buckets]\nimages =[]\nvideos=[]")
     return config
 
 

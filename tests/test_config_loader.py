@@ -1,7 +1,7 @@
 import pytest
 
-import filemason.Config_Loader as config_loader
-from filemason.Config_Loader import load_config
+import filemason.config_loader as config_loader
+from filemason.config_loader import load_config
 from filemason.Exceptions import (
     ConfigFileError,
     ConfigParseError,

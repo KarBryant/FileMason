@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from ..models.ActionStep import ActionStep
+from .action_step import ActionStep
 
 
 @dataclass

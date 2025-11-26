@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from filemason.models.FileItem import FileItem
+from filemason.models.file_item import FileItem
 
 
 def test_basic_file_read(reader, basic_dir):

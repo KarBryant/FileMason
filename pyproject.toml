@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=45", "wheel"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 
@@ -10,10 +10,15 @@ description = "a file organizing cli tool"
 authors = [{name = "Karson Bryant"}]
 readme = "README.md"
 dependencies = []
-requires-python = ">=3.12.4"
+requires-python = ">=3.11"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0", "pytest-cov>=4.1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/KarBryant/FileMason"
+Source = "https://github.com/KarBryant/FileMason"
+Issues = "https://github.com/KarBryant/FileMason/issues"
