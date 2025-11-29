@@ -30,5 +30,5 @@ class ActionStep:
 
     file_id: str | None
     action: Action
-    source: None | Path
-    destination: None | Path
+    source: Path | None
+    destination: Path
