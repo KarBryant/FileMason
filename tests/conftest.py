@@ -57,7 +57,7 @@ def buckets(config, monkeypatch) -> dict:
     monkeypatch.setattr(config_loader, "config_path", config)
 
     config_data = load_config()
-    return config_data
+    return config_data["buckets"]
 
 
 @pytest.fixture
