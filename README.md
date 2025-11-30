@@ -45,6 +45,13 @@ When I started FileMason, I only had a high-level understanding of architecture 
   - Gracefully handles errors and returns them in an "failed actions" list.
   - Custom Executor Errors - MoveError, for handling unique errors.
 
+- **⚙️ Orchestrator** - The central pipeline controller
+  - *Reads* all files in the source directory  
+  - *Classifies* them into user-defined buckets  
+  - *Generates* an `ActionPlan` describing required operations  
+  - *Executes* the plan (or performs a safe *dry-run* preview)
+  - *Returns* a complete `RunResult` snapshot of everything that happened
+
 - **📊 Immutable File Metadata**
   - SHA256-based unique file IDs
   - Timezone-aware timestamps
@@ -55,7 +62,7 @@ When I started FileMason, I only had a high-level understanding of architecture 
 - [x] Config loader validation and error handling  
 - [ ] CLI interface with argument parsing
 - [x] File moving/organizing functionality
-- [ ] Dry-run mode
+- [x] Dry-run mode
 - [ ] Logging system
 
 ## 🏗️ Architecture
@@ -64,23 +71,26 @@ FileMason/
 ├── src/
 │   └── filemason
 │       ├── config.toml          # Bucket definitions
-│       ├── config_loader.py     # Configuration management │ ✅ Production-ready
+│       ├── config_loader.py     # Configuration management  │ ✅ Production-ready
+│       ├── orchestrator.py      # Orchestration of services │ ✅ Production-ready
 │       ├── models/
 │       │    ├──action_steps.py
+│       │    ├──run_result.py
 │       │    ├──action_plan.py
-│       │    └── file_item.py          # Immutable file metadata model
+│       │    └── file_item.py
 │       └── services/
 │           ├── reader.py            # ✅ Production-ready
 │           ├── executor.py          # ✅ Production-ready
 │           ├── planner.py           # ✅ Production-ready
 │           └── classifier.py        # ✅ Production-ready
 └── tests/
-    ├── conftest.py          # Pytest fixtures
-    ├──test_classifier.py    # ✅ 100% coverage
-    ├──test_config_loader.py # ✅ 100% coverage
-    ├──test_planner.py       # ✅ 100% coverage
-    ├──test_executor.py      # ✅ 100% coverage
-    └── test_reader.py       # ✅ 100% coverage
+    ├── conftest.py           # Pytest fixtures
+    ├──test_classifier.py     # ✅ 100% coverage
+    ├──test_config_loader.py  # ✅ 100% coverage
+    ├──test_planner.py        # ✅ 100% coverage
+    ├──test_orchestrator.py   # ✅ 100% coverage
+    ├──test_executor.py       # ✅ 100% coverage
+    └── test_reader.py        # ✅ 100% coverage
 ```
 
 ## 🛠️ Tech Stack
@@ -116,11 +126,12 @@ pytest tests/ -v
 
 ## 💻 Usage (Planned)
 ```bash
-# Organize files in a directory
-filemason organize /path/to/messy/folder
 
 # Dry run (preview changes)
-filemason organize /path/to/folder --dry-run
+filemason organize /path/to/messy/folder
+
+# Organize files in a directory
+filemason organize /path/to/folder --confirm
 
 ```
 
