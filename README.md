@@ -41,6 +41,10 @@ When I started FileMason, I only had a high-level understanding of architecture 
   - Checks for bad TOML configuration, empty buckets, or duplicate extensions
   - Provides custom ConfigLoader errors | ConfigParseError, ConfigValidationError, ConfigFileError
 
+- **🛠️ Executor Service** - Performs actual filesystem operations such as mkdir, and mv/rename
+  - Gracefully handles errors and returns them in an "failed actions" list.
+  - Custom Executor Errors - MoveError, for handling unique errors.
+
 - **📊 Immutable File Metadata**
   - SHA256-based unique file IDs
   - Timezone-aware timestamps
@@ -50,7 +54,7 @@ When I started FileMason, I only had a high-level understanding of architecture 
 - [x] Classifier error handling and testing
 - [x] Config loader validation and error handling  
 - [ ] CLI interface with argument parsing
-- [ ] File moving/organizing functionality
+- [x] File moving/organizing functionality
 - [ ] Dry-run mode
 - [ ] Logging system
 
@@ -67,6 +71,7 @@ FileMason/
 │       │    └── file_item.py          # Immutable file metadata model
 │       └── services/
 │           ├── reader.py            # ✅ Production-ready
+│           ├── executor.py          # ✅ Production-ready
 │           ├── planner.py           # ✅ Production-ready
 │           └── rlassifier.py        # ✅ Production-ready
 └── tests/
@@ -74,6 +79,7 @@ FileMason/
     ├──test_classifier.py    # ✅ 100% coverage
     ├──test_config_loader.py # ✅ 100% coverage
     ├──test_planner.py       # ✅ 100% coverage
+    ├──test_executor.py      # ✅ 100% coverage
     └── test_reader.py       # ✅ 100% coverage
 ```
 
@@ -155,7 +161,7 @@ pytest tests/ -vv
 
 ## ⚙️ Configuration
 
-File buckets are defined in `app/config.toml`:
+File buckets are defined in `src/filemason/config.toml`:
 ```toml
 [buckets]
 images = ["png", "jpeg", "jpg", "gif", "tiff", "webp", "bmp", "svg"]
