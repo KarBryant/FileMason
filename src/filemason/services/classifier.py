@@ -12,13 +12,13 @@ class Classifier:
     O(1) lookup during classification.
     """
 
-    def __init__(self, buckets: Dict):
+    def __init__(self, buckets: Dict[str, list[str]]):
         """Initialize the classifier with a bucket configuration.
 
         Args:
             buckets: A dictionary mapping bucket names to lists of extensions.
         """
-        self.ext_to_buckets: Dict[str, str] = invert_bucket_dict(buckets["buckets"])
+        self.ext_to_buckets: Dict[str, str] = invert_bucket_dict(buckets)
 
     def classify(
         self, file_list: List[FileItem]
