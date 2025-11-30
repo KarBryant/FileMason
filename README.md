@@ -73,7 +73,7 @@ FileMason/
 │           ├── reader.py            # ✅ Production-ready
 │           ├── executor.py          # ✅ Production-ready
 │           ├── planner.py           # ✅ Production-ready
-│           └── rlassifier.py        # ✅ Production-ready
+│           └── classifier.py        # ✅ Production-ready
 └── tests/
     ├── conftest.py          # Pytest fixtures
     ├──test_classifier.py    # ✅ 100% coverage
