@@ -1,22 +1,6 @@
-import pytest
-from filemason.services.planner import Planner
 from filemason.models import action_plan
 from filemason.models.action_step import Action
 from pathlib import Path
-
-
-@pytest.fixture
-def planner():
-    return Planner()
-
-
-@pytest.fixture
-def plan(planner, basic_dir, buckets, classifier_output):
-    classified, unclassified = classifier_output
-    plan = planner.create_plan(
-        base_output_path=basic_dir, files_list=classified, buckets=buckets
-    )
-    return plan
 
 
 def test_planner_happy_path(plan):

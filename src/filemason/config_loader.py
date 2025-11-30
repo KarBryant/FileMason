@@ -4,7 +4,7 @@ import tomllib
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .Exceptions import ConfigFileError, ConfigParseError, ConfigValidationError
+from .exceptions import ConfigFileError, ConfigParseError, ConfigValidationError
 
 _config_cache: Dict[str, Any] | None = None
 

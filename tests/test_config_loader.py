@@ -3,7 +3,7 @@ import pytest
 import filemason.config_loader as config_loader
 from pathlib import Path
 from filemason.config_loader import load_config
-from filemason.Exceptions import (
+from filemason.exceptions import (
     ConfigFileError,
     ConfigParseError,
     ConfigValidationError,

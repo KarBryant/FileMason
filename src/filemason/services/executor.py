@@ -1,13 +1,38 @@
+"""The Executor service takes an action plan and actually performs the actions in the file system."""
+
 from ..models.action_plan import ActionPlan
-from ..models.action_step import Action
+from ..models.action_step import Action, ActionStep
 from filemason.exceptions import MoveError
 
 
 class Executor:
+    """
+    Execute the steps defined in an ActionPlan on the local file system.
 
-    def handle(self, action_plan: ActionPlan):
-        actions_taken = []
-        failed_actions = []
+    The Executor produces side effects, as it is responsible for creating
+    directories and moving files. It does not validate business logic; it
+    only performs the actions it is given and reports which steps succeeded
+    or failed.
+    """
+
+    def handle(
+        self, action_plan: ActionPlan
+    ) -> tuple[list[ActionStep], list[tuple[ActionStep, Exception]]]:
+        """
+        Handle a given action plan. This function iterates through an action plan's ActionSteps in order based on
+        the ActionStep's Action attribute.
+
+        Args:
+        - action_plan(ActionPlan):
+          An ActionPlan object that consists of ActionSteps.
+
+        Returns:
+        - A tuple consisting of 2 lists.
+            - actions_taken: a list of actions that were taken successfully
+            - failed_actions: a list of tuples containing the action step and the error/reason for failure.
+        """
+        actions_taken: list[ActionStep] = []
+        failed_actions: list[tuple[ActionStep, Exception]] = []
         for step in action_plan.steps:
             if step.action == Action.mkdir:
                 try:

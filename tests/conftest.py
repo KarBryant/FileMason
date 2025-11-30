@@ -4,6 +4,7 @@ import pytest
 
 from filemason.services.reader import Reader
 from filemason.services.classifier import Classifier
+from filemason.services.planner import Planner
 import filemason.config_loader as config_loader
 from filemason.config_loader import load_config
 
@@ -11,6 +12,11 @@ from filemason.config_loader import load_config
 @pytest.fixture
 def reader() -> Reader:
     return Reader()
+
+
+@pytest.fixture
+def planner() -> Planner:
+    return Planner()
 
 
 @pytest.fixture
@@ -110,3 +116,12 @@ def fifo_dir(directory: Path):
 
     os.mkfifo(directory / "mypipe")
     return directory
+
+
+@pytest.fixture
+def plan(planner, basic_dir, buckets, classifier_output):
+    classified, unclassified = classifier_output
+    plan = planner.create_plan(
+        base_output_path=basic_dir, files_list=classified, buckets=buckets
+    )
+    return plan
