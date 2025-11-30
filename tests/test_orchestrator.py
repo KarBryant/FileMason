@@ -2,9 +2,6 @@ from filemason.services.classifier import Classifier
 from filemason.services.executor import Executor
 from filemason.services.planner import Planner
 from filemason.services.reader import Reader
-from filemason.models.run_result import RunResult
-from pathlib import Path
-from filemason.config_loader import load_config
 from filemason.orchestrator import Orchestrator
 
 
@@ -15,9 +12,7 @@ def test_orchestrator_dry_run(tmp_path):
     planner = Planner()
     executor = Executor()
 
-    orchestrator = Orchestrator(
-        reader, classifier, planner, executor, bucket_config
-    )
+    orchestrator = Orchestrator(reader, classifier, planner, executor, bucket_config)
 
     file_1 = tmp_path / "notes.txt"
     file_1.write_text("hello")
@@ -41,9 +36,7 @@ def test_orchestrator_execution(tmp_path):
     planner = Planner()
     executor = Executor()
 
-    orchestrator = Orchestrator(
-        reader, classifier, planner, executor, bucket_config
-    )
+    orchestrator = Orchestrator(reader, classifier, planner, executor, bucket_config)
 
     file_1 = tmp_path / "notes.txt"
     file_1.write_text("hello")
