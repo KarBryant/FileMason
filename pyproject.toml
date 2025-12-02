@@ -9,8 +9,15 @@ version = "0.1.0"
 description = "a file organizing cli tool"
 authors = [{name = "Karson Bryant"}]
 readme = "README.md"
-dependencies = []
+dependencies = [
+    "typer>=0.20.0",
+    "rich>=14.2.0"
+]
 requires-python = ">=3.11"
+keywords = ["filemason", "file organizer", "cli tool"]
+
+[project.scripts]
+filemason = "filemason.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0.0",
@@ -20,6 +27,9 @@ dev = ["pytest>=8.0.0",
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+filemason = ["config.toml"]
 
 [project.urls]
 Homepage = "https://github.com/KarBryant/FileMason"

@@ -75,7 +75,7 @@ class Orchestrator:
 
         if dry_run:
             return RunResult(
-                source=directory,
+                source=directory.absolute(),
                 dry_run=dry_run,
                 read_files=read_files,
                 skipped_files=skipped_files,
@@ -88,7 +88,7 @@ class Orchestrator:
 
         successful_steps, failed_steps = self.executor.handle(action_plan)
         return RunResult(
-            source=directory,
+            source=directory.absolute(),
             dry_run=dry_run,
             read_files=read_files,
             skipped_files=skipped_files,
