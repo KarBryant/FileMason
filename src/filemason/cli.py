@@ -5,6 +5,7 @@ Provides Typer-based commands for organizing files, inspecting the
 generated action plan, and viewing the installed version. This module
 primarily serves as the user-facing entry point for the FileMason tool.
 """
+
 import typer
 from rich.console import Console
 from rich.table import Table
