@@ -5,8 +5,8 @@ import pytest
 from filemason.services.reader import Reader
 from filemason.services.classifier import Classifier
 from filemason.services.planner import Planner
-import filemason.config_loader as config_loader
-from filemason.config_loader import load_config
+import filemason.config.config_loader as config_loader
+from filemason.config.config_loader import load_config
 
 
 @pytest.fixture

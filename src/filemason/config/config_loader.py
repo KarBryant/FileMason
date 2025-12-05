@@ -4,11 +4,15 @@ import tomllib
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .exceptions import ConfigFileError, ConfigParseError, ConfigValidationError
+from filemason.exceptions import (
+    ConfigFileError,
+    ConfigParseError,
+    ConfigValidationError,
+)
 
 _config_cache: Dict[str, Any] | None = None
 
-config_path: Path = Path(__file__).parent / "config.toml"
+config_path: Path = Path(__file__).with_name("config.toml")
 
 
 def load_config() -> Dict[str, Any]:
