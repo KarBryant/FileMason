@@ -1,8 +1,8 @@
 import pytest
 
-import filemason.config_loader as config_loader
+import filemason.config.config_loader as config_loader
 from pathlib import Path
-from filemason.config_loader import load_config
+from filemason.config.config_loader import load_config
 from filemason.exceptions import (
     ConfigFileError,
     ConfigParseError,

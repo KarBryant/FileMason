@@ -16,7 +16,7 @@ from filemason.services.classifier import Classifier
 from filemason.services.executor import Executor
 from filemason.services.planner import Planner
 from filemason.services.reader import Reader
-from filemason.config_loader import load_config
+from filemason.config.config_loader import load_config
 from importlib.metadata import version as get_version, PackageNotFoundError
 
 app = typer.Typer(help="FileMason: Organize files into configured buckets")
