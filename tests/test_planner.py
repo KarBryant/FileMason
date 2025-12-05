@@ -30,5 +30,5 @@ def test_planner_with_no_files(planner, basic_dir, buckets):
     mkdir_steps = [s for s in plan.steps if s.action is Action.mkdir]
     move_steps = [s for s in plan.steps if s.action is Action.move]
 
-    assert len(mkdir_steps) == len(buckets)
+    assert len(mkdir_steps) == 0
     assert len(move_steps) == 0

@@ -32,9 +32,10 @@ class Planner:
 
         Two types of steps are generated:
             1. MKDIR steps:
-                One directory-creation step is added for every bucket name defined
-                in the configuration. These steps ensure that all target bucket
-                folders exist before file-move steps execute.
+                One directory-creation step is added for each bucket name defined
+                in the configuration that is actually used by at least one
+                classified file in `files_list`. These steps ensure that all target
+                bucket folders exist before file-move steps execute.
             2. MOVE steps:
                 For each classified FileItem, a move operation is added that will
                 relocate the file from its current location (`file.path`) into the
@@ -66,14 +67,17 @@ class Planner:
         """
 
         action_plan = ActionPlan(steps=[])
+        seen_buckets: set[str] = {file.tags[0] for file in files_list}
+
         for bucket_name in buckets:
-            step = ActionStep(
-                file_id=None,
-                action=Action.mkdir,
-                source=None,
-                destination=base_output_path / bucket_name,
-            )
-            action_plan.steps.append(step)
+            if bucket_name in seen_buckets:
+                step = ActionStep(
+                    file_id=None,
+                    action=Action.mkdir,
+                    source=None,
+                    destination=base_output_path / bucket_name,
+                )
+                action_plan.steps.append(step)
 
         for file in files_list:
             bucket = file.tags[0]
