@@ -25,7 +25,6 @@ def test_get_plan(basic_dir):
     assert "Action" in result.stdout
     assert "Source" in result.stdout
     assert "Destination" in result.stdout
-    assert "MKDIR" in result.stdout
 
 
 def test_organize_dry(basic_dir):

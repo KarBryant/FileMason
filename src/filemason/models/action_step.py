@@ -10,7 +10,6 @@ class Action(Enum):
 
     move = "MOVE"
     mkdir = "MKDIR"
-    rename = "RENAME"
 
     def __str__(self):
         return self.value
