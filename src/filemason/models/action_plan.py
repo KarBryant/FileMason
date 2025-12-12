@@ -1,12 +1,10 @@
 """Domain model representing an ordered sequence of ActionSteps."""
 
-from dataclasses import dataclass
-
+from pydantic import BaseModel, ConfigDict, Field
 from .action_step import ActionStep
 
 
-@dataclass
-class ActionPlan:
+class ActionPlan(BaseModel):
     """
     a collection of ActionSteps that will be executed by the Executor service.
 
@@ -14,4 +12,6 @@ class ActionPlan:
         steps: a list of ActionSteps for the Executor to execute in sequential order.
     """
 
-    steps: list[ActionStep]
+    model_config = ConfigDict(frozen=True, extra="forbid")
+    
+    steps: list[ActionStep] = Field(default_factory=list)
