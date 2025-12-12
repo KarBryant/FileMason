@@ -1,6 +1,5 @@
 import pytest
 from typer.testing import CliRunner
-
 from filemason.cli import app, main
 from importlib.metadata import PackageNotFoundError
 

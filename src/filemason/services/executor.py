@@ -3,6 +3,7 @@
 from ..models.action_plan import ActionPlan
 from ..models.action_step import Action, ActionStep
 from filemason.exceptions import MoveError
+from filemason.models.failed_action import FailedAction
 
 
 class Executor:
@@ -17,7 +18,7 @@ class Executor:
 
     def handle(
         self, action_plan: ActionPlan
-    ) -> tuple[list[ActionStep], list[tuple[ActionStep, Exception]]]:
+    ) -> tuple[list[ActionStep], list[FailedAction]]:
         """
         Handle a given action plan. This function iterates through an action plan's ActionSteps in order based on
         the ActionStep's Action attribute.
@@ -32,38 +33,74 @@ class Executor:
             - failed_actions: a list of tuples containing the action step and the error/reason for failure.
         """
         actions_taken: list[ActionStep] = []
-        failed_actions: list[tuple[ActionStep, Exception]] = []
+        failed_actions: list[FailedAction] = []
         for step in action_plan.steps:
             if step.action == Action.mkdir:
                 try:
                     step.destination.mkdir(exist_ok=True)
                     actions_taken.append(step)
                 except FileNotFoundError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
                 except PermissionError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
                 except OSError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
             elif step.action == Action.move:
                 if step.source is None:
                     raise ValueError("Move commands must have a valid source.")
                 try:
                     if step.destination.exists():
                         failed_actions.append(
-                            (
-                                step,
-                                MoveError(
-                                    "File of this name already exists in destination."
-                                ),
+                            FailedAction(
+                                action_step=step,
+                                error_type=MoveError.__name__,
+                                error_message="File of this name already exists in destination.",
                             )
                         )
+
                         continue
                     step.source.rename(step.destination)
                     actions_taken.append(step)
                 except FileNotFoundError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
                 except PermissionError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
                 except OSError as e:
-                    failed_actions.append((step, e))
+                    failed_actions.append(
+                        FailedAction(
+                            action_step=step,
+                            error_type=type(e).__name__,
+                            error_message=str(e),
+                        )
+                    )
         return actions_taken, failed_actions

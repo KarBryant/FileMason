@@ -1,14 +1,13 @@
 """Domain model for representing file metadata."""
 
-from dataclasses import dataclass, field, replace
 from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
-from typing import List
+from typing import Any
+from pydantic import BaseModel, ConfigDict, Field
 
 
-@dataclass(frozen=True, slots=True)
-class FileItem:
+class FileItem(BaseModel):
     """
     Immutable snapshot of a file's metadata.
 
@@ -22,21 +21,23 @@ class FileItem:
         modified_at: Timezone-aware UTC last modified timestamp.
     """
 
-    id: str = field(init=False)
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    id: str = Field(default="")
     path: Path
     name: str
     extension: str
     size: int
     last_modified: datetime
     created: datetime
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
 
-    def __post_init__(self) -> None:
+    def model_post_init(self, __context: Any) -> None:
         mtime_epoch = int(self.last_modified.timestamp())
         data = f"{self.path.as_posix()}{self.size}{mtime_epoch}".encode("utf-8")
         object.__setattr__(self, "id", sha256(data).hexdigest())
 
-    def with_tag(self, tag) -> "FileItem":
+    def with_tag(self, tag: str) -> "FileItem":
         """
         Return a new FileItem with an additional tag.
 
@@ -46,4 +47,4 @@ class FileItem:
         Returns:
             A new FileItem instance with the given tag added.
         """
-        return replace(self, tags=[*self.tags, tag])
+        return self.model_copy(update={"tags": [*self.tags, tag]})
