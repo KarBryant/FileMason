@@ -12,8 +12,6 @@ class Action(str, Enum):
     mkdir = "MKDIR"
 
 
-
-
 class ActionStep(BaseModel):
     """
     Domain model for a singular action step to be taken by the application.
@@ -25,7 +23,7 @@ class ActionStep(BaseModel):
         destination: The destination path relevant to the operation.
     """
 
-    model_config = ConfigDict(frozen=True, extra='forbid')
+    model_config = ConfigDict(frozen=True, extra="forbid")
 
     file_id: str | None = None
     action: Action

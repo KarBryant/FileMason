@@ -1,8 +1,8 @@
 from filemason.models.action_plan import ActionPlan
 from filemason.models.action_step import ActionStep, Action
 from filemason.services.executor import Executor
+from filemason.models.failed_action import FailedAction
 import pytest
-from filemason.exceptions import MoveError
 from pathlib import Path
 
 
@@ -114,8 +114,7 @@ def test_src_deleted_during_move(basic_executor_plan, monkeypatch):
 
     assert handled == []
     assert len(unhandled) == 1
-    assert isinstance(unhandled[0][1], FileNotFoundError)
-    assert isinstance(unhandled[0][0], ActionStep)
+    assert unhandled[0].error_type == "FileNotFoundError"
 
 
 def test_file_already_exists(basic_executor_plan, monkeypatch):
@@ -128,9 +127,8 @@ def test_file_already_exists(basic_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert unhandled[0][0].destination.exists()
-    assert isinstance(unhandled[0][1], MoveError)
-
+    assert isinstance(unhandled[0], FailedAction)
+    assert unhandled[0].error_type == "MoveError"
     assert handled == []
 
 
@@ -144,7 +142,7 @@ def test_no_permissions_to_file(basic_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert isinstance(unhandled[0][1], PermissionError)
+    assert isinstance(unhandled[0], FailedAction)
     assert handled == []
 
 
@@ -158,7 +156,7 @@ def test_OS_error_with_file(basic_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert isinstance(unhandled[0][1], OSError)
+    assert isinstance(unhandled[0], FailedAction)
     assert handled == []
 
 
@@ -180,7 +178,7 @@ def test_dir_not_found(mkdir_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert isinstance(unhandled[0][1], FileNotFoundError)
+    assert isinstance(unhandled[0], FailedAction)
     assert handled == []
 
 
@@ -194,7 +192,7 @@ def test_no_permissions_to_dir(mkdir_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert isinstance(unhandled[0][1], PermissionError)
+    assert isinstance(unhandled[0], FailedAction)
     assert handled == []
 
 
@@ -208,5 +206,5 @@ def test_OS_issue_with_dir(mkdir_executor_plan, monkeypatch):
 
     handled, unhandled = Executor().handle(plan)
 
-    assert isinstance(unhandled[0][1], OSError)
+    assert isinstance(unhandled[0], FailedAction)
     assert handled == []

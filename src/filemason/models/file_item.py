@@ -3,9 +3,8 @@
 from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Annotated
 
 
 class FileItem(BaseModel):
@@ -22,8 +21,8 @@ class FileItem(BaseModel):
         modified_at: Timezone-aware UTC last modified timestamp.
     """
 
-    model_config = ConfigDict(frozen=True, extra='forbid')
-    
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
     id: str = Field(default="")
     path: Path
     name: str
@@ -49,4 +48,3 @@ class FileItem(BaseModel):
             A new FileItem instance with the given tag added.
         """
         return self.model_copy(update={"tags": [*self.tags, tag]})
- 

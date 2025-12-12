@@ -1,14 +1,14 @@
 """Domain module for representing FileMason Job metadata."""
 
-from dataclasses import dataclass
 from filemason.models.file_item import FileItem
 from filemason.models.action_step import ActionStep
 from filemason.models.action_plan import ActionPlan
+from filemason.models.failed_action import FailedAction
+from pydantic import BaseModel, ConfigDict
 from pathlib import Path
 
 
-@dataclass(frozen=True, slots=True)
-class RunResult:
+class RunResult(BaseModel):
     """
     Immutable snapshot capturing the complete outcome of a FileMason run.
 
@@ -24,6 +24,7 @@ class RunResult:
         failed_actions (list[tuple[ActionStep, Exception]]): Actions that failed, with the associated exception.
     """
 
+    model_config = ConfigDict(frozen=True, extra="forbid")
     source: Path
     dry_run: bool
     read_files: list[FileItem]
@@ -32,4 +33,4 @@ class RunResult:
     unclassified_files: list[FileItem]
     action_plan: ActionPlan
     actions_taken: list[ActionStep]
-    failed_actions: list[tuple[ActionStep, Exception]]
+    failed_actions: list[FailedAction]

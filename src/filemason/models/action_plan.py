@@ -13,5 +13,5 @@ class ActionPlan(BaseModel):
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
-    
+
     steps: list[ActionStep] = Field(default_factory=list)
