@@ -1,6 +1,6 @@
 """Domain model representing an ordered sequence of ActionSteps."""
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 from .action_step import ActionStep
 
 
