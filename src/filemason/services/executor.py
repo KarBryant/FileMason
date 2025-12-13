@@ -30,7 +30,7 @@ class Executor:
         Returns:
         - A tuple consisting of 2 lists.
             - actions_taken: a list of actions that were taken successfully
-            - failed_actions: a list of tuples containing the action step and the error/reason for failure.
+            - failed_actions: a list of failed_actions containing the action step and the error/reason for failure.
         """
         actions_taken: list[ActionStep] = []
         failed_actions: list[FailedAction] = []

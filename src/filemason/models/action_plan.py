@@ -12,6 +12,4 @@ class ActionPlan(BaseModel):
         steps: a list of ActionSteps for the Executor to execute in sequential order.
     """
 
-    model_config = ConfigDict(frozen=True, extra="forbid")
-
     steps: list[ActionStep] = Field(default_factory=list)

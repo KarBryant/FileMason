@@ -30,7 +30,7 @@ dev = ["pytest>=8.0.0",
 where = ["src"]
 
 [tool.setuptools.package-data]
-filemason = ["config.toml"]
+filemason = ["config/config.toml"]
 
 [project.urls]
 Homepage = "https://github.com/KarBryant/FileMason"

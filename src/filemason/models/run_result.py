@@ -21,7 +21,7 @@ class RunResult(BaseModel):
         unclassified_files (list[FileItem]): Files that could not be classified based on the config.
         action_plan (ActionPlan): The plan of actions generated for this job.
         actions_taken (list[ActionStep]): Actions successfully executed by the Executor.
-        failed_actions (list[tuple[ActionStep, Exception]]): Actions that failed, with the associated exception.
+        failed_actions (list[FailedAction]): Actions that failed, with the associated exception.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")

@@ -1,243 +1,136 @@
-# FileMason 🔨
+# FileMason
+
 [![Python package](https://github.com/KarBryant/FileMason/actions/workflows/python-package.yml/badge.svg)](https://github.com/KarBryant/FileMason/actions/workflows/python-package.yml)
 
-A file organizer CLI tool built with Python that intelligently categorizes and manages files based on their extensions.
+FileMason is a Python CLI that organizes files into configurable “buckets” (images, videos, documents, etc.) based on file extension. It is designed to be safe-by-default, observable, and testable.
 
-> **⚠️ Project Status:** Currently in active development. The Reader and Classifier services are production-ready with 100% test coverage.
+## Key behavior
 
-## 🎯 Purpose
+- **Dry-run by default**: preview the action plan before making changes.
+- **Deterministic planning**: generates an ordered action plan (mkdir → move).
+- **Structured run results**: returns a complete `RunResult` snapshot (read/classified/skipped/planned/executed/failed).
+- **Collision-safe moves**: does not overwrite existing files at the destination.
 
-FileMason automates file organization by reading directories, classifying files into configurable buckets (images, videos, documents, etc.), and preparing them for organized storage. Built as a portfolio project demonstrating professional software engineering practices.
+## Quick start
 
-## 🚀 Why I built this
-
-I started learning Python in June of 2025. While learning the fundamentals, I felt like I didn’t have anything meaningful to apply my knowledge to—just a few basic scripts or guided projects. I wanted to build something **real**, something that would genuinely push me.
-
-When I started FileMason, I only had a high-level understanding of architecture and the software development lifecycle. This project became my whetstone — the tool I’m using to hone my skills as a junior software developer.
-
-## ✨ Features
-
-### Currently Implemented
-- **📁 Directory Reader** - Production-ready file scanning
-  - Reads all files from a directory
-  - Skips hidden files, symlinks, and subdirectories with detailed logging
-  - Comprehensive error handling for permission issues
-  - Alphabetical sorting (case-insensitive)
-  - 100% test coverage
-
-- **🏷️ File Classification** - Smart categorization
-  - Config-driven bucket definitions
-  - Supports compound extensions (`.tar.gz`)
-  - O(1) lookup performance via inverted dictionary
-  - Categories: images, videos, audio, documents, archives, 3D models
-  - Error handling against empty buckets and duplicate extensions
-
-  **💻 Planning Service** - Plans action steps before execution
-  - Intakes information from the config file, classifier, and a base output directory.
-  - Calculates destination paths for files
-  - Ensures that buckets are created before moving any files.
-
-- **📁 Config Loader** - Configuration file verification, caching, and loading
-  - Checks for bad TOML configuration, empty buckets, or duplicate extensions
-  - Provides custom ConfigLoader errors | ConfigParseError, ConfigValidationError, ConfigFileError
-
-- **🛠️ Executor Service** - Performs actual filesystem operations such as mkdir, and mv/rename
-  - Gracefully handles errors and returns them in an "failed actions" list.
-  - Custom Executor Errors - MoveError, for handling unique errors.
-
-- **⚙️ Orchestrator** - The central pipeline controller
-  - *Reads* all files in the source directory  
-  - *Classifies* them into user-defined buckets  
-  - *Generates* an `ActionPlan` describing required operations  
-  - *Executes* the plan (or performs a safe *dry-run* preview)
-  - *Returns* a complete `RunResult` snapshot of everything that happened
-
-- **📊 Immutable File Metadata**
-  - SHA256-based unique file IDs
-  - Timezone-aware timestamps
-  - Frozen dataclass design for thread safety
-
-### In Progress
-- [x] Classifier error handling and testing
-- [x] Config loader validation and error handling  
-- [ ] CLI interface with argument parsing
-- [x] File moving/organizing functionality
-- [x] Dry-run mode
-- [ ] Logging system
-
-## 🏗️ Architecture
-```
-FileMason/
-├── src/
-│   └── filemason
-│       ├── config.toml          # Bucket definitions
-│       ├── config_loader.py     # Configuration management  │ ✅ Production-ready
-│       ├── orchestrator.py      # Orchestration of services │ ✅ Production-ready
-│       ├── models/
-│       │    ├──action_steps.py
-│       │    ├──run_result.py
-│       │    ├──action_plan.py
-│       │    └── file_item.py
-│       └── services/
-│           ├── reader.py            # ✅ Production-ready
-│           ├── executor.py          # ✅ Production-ready
-│           ├── planner.py           # ✅ Production-ready
-│           └── classifier.py        # ✅ Production-ready
-└── tests/
-    ├── conftest.py           # Pytest fixtures
-    ├──test_classifier.py     # ✅ 100% coverage
-    ├──test_config_loader.py  # ✅ 100% coverage
-    ├──test_planner.py        # ✅ 100% coverage
-    ├──test_orchestrator.py   # ✅ 100% coverage
-    ├──test_executor.py       # ✅ 100% coverage
-    └── test_reader.py        # ✅ 100% coverage
-```
-
-## 🛠️ Tech Stack
-
-- **Python 3.11+** - Modern Python with type hints
-- **pytest** - Testing framework with fixtures and mocking
-- **tomllib** - TOML configuration parsing
-- **pathlib** - Cross-platform file path handling
-- **dataclasses** - Immutable data structures
-
-## 📋 Requirements
-```
-Python 3.11+
-pytest>=7.0.0
-```
-
-## 🚀 Installation
 ```bash
-# Clone the repository
-git clone https://github.com/KarBryant/FileMason.git
-cd FileMason
+pip install filemason
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Preview what would happen (dry-run)
+filemason organize ~/Downloads
 
-# Install the package in editable mode
-pip install -e .[dev]
+# Execute the plan
+filemason organize ~/Downloads --no-dry
 
-# Run tests
-pytest tests/ -v
+# Print the generated plan
+filemason get-plan ~/Downloads
 ```
 
-## 💻 Usage (Planned)
+## Commands
+
+### `filemason organize`
+
+Organize files in a directory.
+
 ```bash
-
-# Dry run (preview changes)
-filemason organize /path/to/messy/folder
-
-# Organize files in a directory
-filemason organize /path/to/folder --confirm
-
+filemason organize [DIRECTORY] [--dry | --no-dry]
 ```
 
-## 🧪 Testing
+Notes:
+- Defaults to the current directory (`.`).
+- Dry-run is enabled by default.
+
+### `filemason get-plan`
+
+Show the action plan without performing any moves.
+
 ```bash
-# Run all tests with coverage
-pytest tests/ -v --cov=services --cov=models
-
-# Run specific test file
-pytest tests/test_reader.py -v
-
-# Run with detailed output
-pytest tests/ -vv
+filemason get-plan [DIRECTORY]
 ```
 
-### Test Coverage
-- **Reader Service:** 100% ✅
-  - Basic file reading
-  - Multi-file directories
-  - Hidden files, symlinks, subdirectories
-  - Permission errors
-  - Edge cases (FIFOs, empty directories)
-  - Metadata extraction
-  - Path handling
+### `filemason version`
 
-- **Classifier Service:** 100% ✅
-  - Unclassified files returned
-  - Classified files returned
+Show the installed FileMason version.
 
-- **Config Loader** 100% ✅
-  - Config not cached
-  - Config with no buckets
-  - Duplicate extensions
-  - Empty bucket
-  - Multiple empty buckets
-  - Config cached
-  - Bad TOML configuration
+```bash
+filemason version
+```
 
-## ⚙️ Configuration
+## How it works
 
-File buckets are defined in `src/filemason/config.toml`:
+FileMason runs a simple pipeline:
+
+1. **Reader** scans the directory and produces `FileItem` objects (skipping hidden files, symlinks, and subdirectories).
+2. **Classifier** assigns each file to a bucket using a fast extension → bucket lookup.
+3. **Planner** converts classified files into an ordered `ActionPlan` (MKDIR then MOVE steps).
+4. **Executor** performs the actions and reports successes/failures.
+5. **Orchestrator** coordinates the entire workflow and returns a `RunResult`.
+
+## Configuration
+
+Buckets are defined in `config.toml`:
+
 ```toml
 [buckets]
-images = ["png", "jpeg", "jpg", "gif", "tiff", "webp", "bmp", "svg"]
-videos = ["mp4", "mov", "mkv", "avi", "wmv", "flv", "m4v", "mpeg"]
-audio = ["mp3", "wav", "flac", "aac", "m4a", "ogg", "wma"]
-documents = ["txt", "md", "pdf", "doc", "docx", "xlsx", "csv", "json"]
-archives = ["zip", "rar", "7z", "tar", "gz", "tar.gz"]
+images = ["png", "jpeg", "jpg", "gif", "tiff", "tif", "webp", "bmp", "nef", "svg"]
+videos = ["mp4", "mov", "mkv", "avi", "wmv", "flv", "m4v", "mpeg", "3gp"]
+audio = ["mp3", "wav", "flac", "aac", "m4a", "ogg", "wma", "mid", "midi"]
+documents = ["txt", "md", "pdf", "doc", "docx", "xlsx", "csv", "json", "xml", "html"]
+archives = ["zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "tar.gz", "tgz"]
 models = ["obj", "fbx", "stl", "blend"]
 ```
 
-## 🎓 Design Decisions
+Config validation includes:
+- buckets cannot be empty
+- extensions cannot appear in multiple buckets
 
-### Why Invert the Dictionary?
-The classifier inverts the bucket configuration at initialization:
-```python
-# From: {"images": ["png", "jpg"]}
-# To:   {"png": "images", "jpg": "images"}
+## Project status
+
+Current features:
+- Reader / Classifier / Planner / Executor / Orchestrator services
+- Typer CLI (`organize`, `get-plan`, `version`)
+- Pydantic models (`FileItem`, `ActionStep`, `ActionPlan`, `RunResult`, `FailedAction`)
+- CI (Black, Ruff, pytest + coverage threshold)
+
+Planned (in progress):
+- persisted run artifacts (JSON reports per run)
+- undo support (based on recorded executed actions)
+
+## Development
+
+```bash
+git clone https://github.com/KarBryant/FileMason.git
+cd FileMason
+
+python -m venv venv
+source venv/bin/activate
+
+pip install -e ".[dev]"
+pytest -v
 ```
-This enables **O(1) extension lookups** instead of O(buckets × extensions) nested loops, making classification ~60x faster for typical configurations.
 
-### Why Immutable FileItems?
-Using frozen dataclasses ensures:
-- Thread safety for concurrent operations
-- Predictable behavior (no accidental mutations)
-- Hashable objects for set/dict operations
-- Clear data flow through the pipeline
+## Design notes
 
-### Why Skip Instead of Error?
-The Reader returns both successful reads and skipped items:
-```python
-files, skipped = reader.read_directory(path)
-```
-This allows:
-- Graceful handling of mixed directory contents
-- Detailed reporting without halting execution
-- User awareness of what was ignored and why
-- Allows for providing data to the planned Logger service
+### Why invert the bucket config?
+The classifier builds an inverted mapping at startup:
 
-## 🤝 Contributing
+- From: `{ "images": ["png", "jpg"] }`
+- To: `{ "png": "images", "jpg": "images" }`
 
-This is a learning project, but suggestions and feedback are welcome! Feel free to:
-- Open issues for bugs or feature requests
-- Submit PRs for improvements
-- Share ideas for better organization strategies
+This makes per-file classification O(1) for extension lookup.
 
-## 📝 Development Notes
+### Why model failures explicitly?
+Execution failures are captured as structured data (`FailedAction`) containing error type and message, instead of attempting to serialize raw Python exceptions.
 
-Built while transitioning from infrastructure engineering to backend development. Emphasizes:
-- **Test-driven development** - Write tests first
-- **Type safety** - Comprehensive type hints
-- **Error handling** - Graceful failure modes
-- **Documentation** - Clear docstrings and comments
-- **Performance** - Algorithmic optimization (O(1) lookups)
+## Requirements
 
-## 📄 License
+- Python 3.11+
 
-MIT License
+## License
 
-## 👤 Author
+MIT
 
-**Karson Bryant**
-- GitHub: [@KarBryant](https://github.com/KarBryant)
-- 10 year Infrastructure Engineer looking to add development and automation to my skillset
-- Focused on building production-quality Python applications
+## Author
 
----
-
-*Built with Python 🐍 and a focus on clean, tested, maintainable code.*
+Karson Bryant  
+GitHub: [@KarBryant](https://github.com/KarBryant)
