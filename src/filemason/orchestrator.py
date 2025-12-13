@@ -66,7 +66,7 @@ class Orchestrator:
             including read, classified, and skipped files, the generated
             action plan, and any actions taken or failed.
         """
-
+        directory = Path(directory).resolve()
         read_files, skipped_files = self.reader.read_directory(directory)
         classified_files, unclassified_files = self.classifier.classify(read_files)
         action_plan = self.planner.create_plan(
@@ -75,7 +75,7 @@ class Orchestrator:
 
         if dry_run:
             return RunResult(
-                source=directory.absolute(),
+                source=directory,
                 dry_run=dry_run,
                 read_files=read_files,
                 skipped_files=skipped_files,
